@@ -21,103 +21,96 @@ formEl.onsubmit = function (e) {
 };
 
 //  fetch weather data from the API
-async function getWeather(query) {
-    // default 'us'
+async = getWeather(query) {
+    // Default to 'us' 
     if (!query.includes(",")) query += ',us';
 
-    // weather data from OpenWeatherMap API
-    return fetch(
-        'https://api.openweathermap.org/data/3.0/weather?q=' + query + '&units=imperial&APPID=6f472cfbf92aff8f9ee810374f0c3e63'
-    )
-    .then(function (res) {
-        return res.json(); 
-    })
-    .then(function (data) {
-        // error if the location is not found
-        if (data.cod === "404") throw new Error('location not found');
+    // Fetch weather data from the OpenWeatherMap API
+    const response = await fetch(
+        `https://api.openweathermap.org/data/3.0/weather?q=${query}&units=imperial&APPID=6f472cfbf92aff8f9ee810374f0c3e63`
+    );
+    const data = await response.json();
 
-        // weather information from API data
-        const iconUrl = 'https://openweathermap.org/img/wn/' + data.weather[0].icon + '@2x.png';
-        const description = data.weather[0].description;
-        const actualTemp = data.main.temp;
-        const feelsLikeTemp = data.main.feels_like;
-        const place = data.name + ", " + data.sys.country;
-        const updatedAt = new Date(data.dt * 1000);
+    // Throw an error if the location is not found
+    if (data.cod === "404") throw new Error('Location not found');
 
-        //  structured weather data
-        return {
-            coords: data.coord.lat + "," + data.coord.lon,
-            description: description,
-            iconUrl: iconUrl,
-            actualTemp: actualTemp,
-            feelsLikeTemp: feelsLikeTemp,
-            place: place,
-            updatedAt: updatedAt
-        };
-    });
+    const {
+        coord: { lat, lon },
+        weather: [{ icon, description }],
+        main: { temp: actualTemp, feels_like: feelsLikeTemp },
+        name,
+        sys: { country },
+        dt
+    } = data;
+
+    // Create weather data
+    return {
+        coords: `${lat}, ${lon}`,
+        description,
+        iconUrl: `https://openweathermap.org/img/wn/${icon}@2x.png`,
+        actualTemp,
+        feelsLikeTemp,
+        place: `${name}, ${country}`,
+        updatedAt: new Date(dt * 1000)
+    };
 }
 
-// sisplay an error message if the location is not found
-function displayLocNotFound() {
-    weatherContainer.innerHTML = ""; // clear previous
+
+// display an error message if the location is not found
+const displayLocNotFound = ( ) => {
+    weatherContainer.innerHTML = ``; // clear previous
 
     // error message
-    const errMsg = document.createElement('h2');
-    errMsg.textContent = "Location not found";
-    weatherContainer.appendChild(errMsg);
-}
+    const errMsg = createElement('h2');
+    errMsg.textContent = `Location not found`;
+    
+    const { appendChild } = weatherContainer;
+    appendChild(errMsg);
+    
+};
 
-// display fetched weather data
-function displayWeatherInfo(weatherObj) {
-    weatherContainer.innerHTML = ""; // Clear previous weather data
+const displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feelsLikeTemp, updatedAt }) {
+    weatherContainer.innerHTML = ``; // Clear previous weather data
 
-    // line break
-    function addBreak() {
-        weatherContainer.appendChild(document.createElement('br'));
-    }
+    const addBreak = () => weatherContainer.appendChild(document.createElement('br'));
 
-    // location name
+    // Location name
     const placeName = document.createElement('h2');
-    placeName.textContent = weatherObj.place;
+    placeName.textContent = place;
     weatherContainer.appendChild(placeName);
 
-    // Google Maps link 
+    // Google Maps link
     const whereLink = document.createElement('a');
-    whereLink.textContent = "Click to view map";
-    whereLink.href = "https://www.google.com/maps/search/?api=1&query=" + weatherObj.coords;
-    whereLink.target = "_BLANK";
+    whereLink.textContent = `Click to view map`;
+    whereLink.href = `https://www.google.com/maps/search/?api=1&query=${coords}`;
+    whereLink.target = "_blank";
     weatherContainer.appendChild(whereLink);
 
-    // weather condition icon
+    // Weather condition icon
     const icon = document.createElement('img');
-    icon.src = weatherObj.iconUrl;
+    icon.src = iconUrl;
     weatherContainer.appendChild(icon);
 
-    // weather description
-    const description = document.createElement('p');
-    description.textContent = weatherObj.description;
-    description.style.textTransform = 'capitalize'; // Capitalize
-    weatherContainer.appendChild(description);
+    // Weather description
+    const descriptionElement = document.createElement('p');
+    descriptionElement.textContent = description;
+    descriptionElement.style.textTransform = 'capitalize';
+    weatherContainer.appendChild(descriptionElement);
 
-    addBreak(); // line break
+    addBreak(); // Line break
 
-    // actual temperature
+    // Actual temperature
     const temp = document.createElement('p');
-    temp.textContent = "Current: " + weatherObj.actualTemp + "℉";
+    temp.textContent = `Current: ${actualTemp}℉`;
     weatherContainer.appendChild(temp);
 
-    // 'feels like' temperature
-    const feelsLikeTemp = document.createElement('p');
-    feelsLikeTemp.textContent = "Feels Like: " + weatherObj.feelsLikeTemp + "℉";
-    weatherContainer.appendChild(feelsLikeTemp);
+    // 'Feels like' temperature
+    const feelsLike = document.createElement('p');
+    feelsLike.textContent = `Feels Like: ${feelsLikeTemp}℉`;
+    weatherContainer.appendChild(feelsLike);
 
-    addBreak(); // Add another line break
-
-    // last updated time
-    const updatedAt = document.createElement('p');
-    updatedAt.textContent = "Last updated: " + weatherObj.updatedAt.toLocaleTimeString(
-        'en-US',
-        { hour: 'numeric', minute: '2-digit' }
-    );
-    weatherContainer.appendChild(updatedAt);
+    // Last updated time
+    const updated = document.createElement('p');
+    updated.textContent = `Last updated: ${updatedAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+    weatherContainer.appendChild(updated);
 }
