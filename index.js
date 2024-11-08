@@ -19,7 +19,7 @@ formEl.onsubmit = function (e) {
     
     inputEl.value = ""; 
 };
-/* 
+
 //  fetch weather data from the API
 async function getWeather(query) {
     // Default to 'us' 
@@ -66,7 +66,7 @@ function displayLocNotFound() {
     weatherContainer.appendChild(errMsg);
 }
 
-const displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feelsLikeTemp, updatedAt }) {
+function displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feelsLikeTemp, updatedAt }) {
     weatherContainer.innerHTML = ``; // Clear previous weather data
 
     const addBreak = () => weatherContainer.appendChild(document.createElement('br'));
@@ -111,4 +111,3 @@ const displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feel
     updated.textContent = `Last updated: ${updatedAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
     weatherContainer.appendChild(updated);
 }
-    */
