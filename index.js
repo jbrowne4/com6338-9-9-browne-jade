@@ -2,6 +2,7 @@
 const weatherContainer = document.getElementById('weather');
 const formEl = document.querySelector('form');
 const inputEl = document.querySelector('input');
+const key = `6f472cfbf92aff8f9ee810374f0c3e63`;
 
 // form
 formEl.onsubmit = function (e) {
@@ -27,7 +28,7 @@ async function getWeather(query) {
 
     // Fetch weather data from the OpenWeatherMap API
     const response = await fetch(
-        `https://api.openweathermap.org/data/3.0/weather?q=${query}&units=imperial&APPID=6f472cfbf92aff8f9ee810374f0c3e63`
+        `https://api.openweathermap.org/data/3.0/weather?q=${query}&units=imperial&${key}`
     );
     const data = await response.json();
 
@@ -79,7 +80,7 @@ function displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, f
     // Google Maps link
     const whereLink = document.createElement('a');
     whereLink.textContent = `Click to view map`;
-    whereLink.href = `https://www.google.com/maps/search/?api=1&query=${coords}`;
+    whereLink.href = `https://www.google.com/maps/search/&query=${coords}`; //video//
     whereLink.target = "_blank";
     weatherContainer.appendChild(whereLink);
 
