@@ -13,15 +13,15 @@ formEl.onsubmit = function (e) {
     if (!userInput) return; 
 
     // weather data and display it if found, otherwise display error message
-    getWeather(userInput)
+ getWeather(userInput)
         .then(displayWeatherInfo)
         .catch(displayLocNotFound);
     
     inputEl.value = ""; 
 };
-
+/* 
 //  fetch weather data from the API
-async = getWeather(query) {
+async function getWeather(query) {
     // Default to 'us' 
     if (!query.includes(",")) query += ',us';
 
@@ -57,17 +57,14 @@ async = getWeather(query) {
 
 
 // display an error message if the location is not found
-const displayLocNotFound = ( ) => {
-    weatherContainer.innerHTML = ``; // clear previous
+function displayLocNotFound() {
+    weatherContainer.innerHTML = ""; // clear previous
 
     // error message
-    const errMsg = createElement('h2');
-    errMsg.textContent = `Location not found`;
-    
-    const { appendChild } = weatherContainer;
-    appendChild(errMsg);
-    
-};
+    var errMsg = document.createElement('h2');
+    errMsg.textContent = "Location not found";
+    weatherContainer.appendChild(errMsg);
+}
 
 const displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feelsLikeTemp, updatedAt }) {
     weatherContainer.innerHTML = ``; // Clear previous weather data
@@ -100,17 +97,18 @@ const displayWeatherInfo({ place, coords, iconUrl, description, actualTemp, feel
     addBreak(); // Line break
 
     // Actual temperature
-    const temp = document.createElement('p');
+   let temp = document.createElement('p');
     temp.textContent = `Current: ${actualTemp}℉`;
     weatherContainer.appendChild(temp);
 
     // 'Feels like' temperature
-    const feelsLike = document.createElement('p');
+    let feelsLike = document.createElement('p');
     feelsLike.textContent = `Feels Like: ${feelsLikeTemp}℉`;
     weatherContainer.appendChild(feelsLike);
 
     // Last updated time
-    const updated = document.createElement('p');
+    let updated = document.createElement('p');
     updated.textContent = `Last updated: ${updatedAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
     weatherContainer.appendChild(updated);
 }
+    */
